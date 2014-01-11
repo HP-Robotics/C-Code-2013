@@ -136,13 +136,13 @@ public:
 		{
 			Shooter.Feed();
 			if (Gamepad.GetY() > 0.17 || Gamepad.GetY() < -0.17)
-			{
-				DriveWheels.MecanumDrive_Cartesian(-Gamepad.GetY(), -Gamepad.GetZ(), -Gamepad.GetX(), 0);
-			}
-			else
-			{
-				DriveWheels.MecanumDrive_Cartesian(0, -Gamepad.GetZ(), -Gamepad.GetX(), 0);
-			}
+								{
+									DriveWheels.TankDrive(Gamepad.GetY(), Gamepad.GetTwist());
+								}
+								else
+								{
+									DriveWheels.TankDrive(0.0, 0.0);
+								}
 	//		printf ("%g", Gamepad.GetX());
 	//		printf ("%g\n", Gamepad.GetY());
 			if (HurricaneSwitch.Get()!=lastHurricaneSwitch)
