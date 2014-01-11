@@ -37,7 +37,7 @@ class RobotDemo : public SimpleRobot
 	
 public:
 	RobotDemo(void):
-		DriveWheels(1, 2, 3, 4),
+		DriveWheels(4, 3),
 		Shooter(5),
 		Hurricane(3),
 		ShooterAngle(2),
@@ -58,8 +58,8 @@ public:
 		AngleTime(0.0)
 	{
 		//vision.Start();
-		DriveWheels.SetExpiration(0.25);
-		Shooter.SetExpiration(0.25);
+		DriveWheels.SetExpiration(0.75);
+		Shooter.SetExpiration(0.75);
 		Shooter.SetEncoder(&shootEncoder);
 		shootEncoder.SetPIDSourceParameter(Encoder::kRate);
 		shootEncoder.Start();
@@ -115,8 +115,8 @@ public:
 
 	void OperatorControl(void)
 	{
-		DriveWheels.SetSafetyEnabled(true);
-		Shooter.SetSafetyEnabled(true);
+		DriveWheels.SetSafetyEnabled(false);
+		Shooter.SetSafetyEnabled(false);
 		bool PIDStarted = false;
 		bool manualShooter = false;
 		int PIDGoodCount=0;
@@ -134,17 +134,8 @@ public:
 		StopShooting();
 		while (IsOperatorControl() && IsEnabled())
 		{
+			DriveWheels.TankDrive(-Gamepad.GetRawAxis(2), -Gamepad.GetRawAxis(4));
 			Shooter.Feed();
-			if (Gamepad.GetY() > 0.17 || Gamepad.GetY() < -0.17)
-								{
-									DriveWheels.TankDrive(Gamepad.GetY(), Gamepad.GetTwist());
-								}
-								else
-								{
-									DriveWheels.TankDrive(0.0, 0.0);
-								}
-	//		printf ("%g", Gamepad.GetX());
-	//		printf ("%g\n", Gamepad.GetY());
 			if (HurricaneSwitch.Get()!=lastHurricaneSwitch)
 			{
 				printf("Limit of the Hurricane Switch: %d\n", HurricaneSwitch.Get());
@@ -293,7 +284,7 @@ public:
 				DoAutoAim=true;
 			}
 #endif
-			Wait(0.01);
+		//	Wait(0.01);
 		}
 		ShooterPID.Disable();
 		Hurricane.Set(Relay::kOff);
