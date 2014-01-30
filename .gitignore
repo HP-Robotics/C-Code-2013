@@ -1,7 +1,12 @@
+PPC603gnu/
+
 # Compiled Object files
 *.slo
 *.lo
 *.o
+*.out
+*.c
+*.d
 
 # Compiled Dynamic libraries
 *.so

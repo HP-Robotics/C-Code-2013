@@ -14,6 +14,7 @@
 class RobotDemo : public SimpleRobot
 {
 	RobotDrive DriveWheels;
+	RobotDrive FrontWheels;
 	PIDJaguar Shooter;
 	Relay Hurricane;
 	Relay ShooterAngle;
@@ -37,7 +38,8 @@ class RobotDemo : public SimpleRobot
 	
 public:
 	RobotDemo(void):
-		DriveWheels(4, 3),
+		DriveWheels(3,4),
+		FrontWheels(1,2),
 		Shooter(5),
 		Hurricane(3),
 		ShooterAngle(2),
@@ -59,6 +61,7 @@ public:
 	{
 		//vision.Start();
 		DriveWheels.SetExpiration(0.75);
+		FrontWheels.SetExpiration(0.75);
 		Shooter.SetExpiration(0.75);
 		Shooter.SetEncoder(&shootEncoder);
 		shootEncoder.SetPIDSourceParameter(Encoder::kRate);
@@ -88,6 +91,7 @@ public:
 		int PIDGoodCount = 0;
 		int ShotsTaken = 0;
 		DriveWheels.SetSafetyEnabled(false);
+		FrontWheels.SetSafetyEnabled(false);
 		Shooter.SetSafetyEnabled(false);
 		ShooterPID.Enable();
 		while (IsAutonomous() && IsEnabled() && ShotsTaken < 8)
@@ -116,6 +120,7 @@ public:
 	void OperatorControl(void)
 	{
 		DriveWheels.SetSafetyEnabled(false);
+		FrontWheels.SetSafetyEnabled(false);
 		Shooter.SetSafetyEnabled(false);
 		bool PIDStarted = false;
 		bool manualShooter = false;
@@ -135,6 +140,7 @@ public:
 		while (IsOperatorControl() && IsEnabled())
 		{
 			DriveWheels.TankDrive(-Gamepad.GetRawAxis(2), -Gamepad.GetRawAxis(4));
+			FrontWheels.TankDrive(-Gamepad.GetRawAxis(2), -Gamepad.GetRawAxis(4));
 			Shooter.Feed();
 			if (HurricaneSwitch.Get()!=lastHurricaneSwitch)
 			{
@@ -406,6 +412,7 @@ public:
 	void Test()
 	{
 		DriveWheels.SetSafetyEnabled(false);
+		FrontWheels.SetSafetyEnabled(false);
 		Shooter.SetSafetyEnabled(false);
 
 		bool lastHurricaneSwitch=!HurricaneSwitch.Get();
