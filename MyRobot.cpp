@@ -14,7 +14,7 @@
 class RobotDemo : public SimpleRobot
 {
 	RobotDrive DriveWheels;
-	RobotDrive FrontWheels;
+	//RobotDrive FrontWheels;
 	PIDJaguar Shooter;
 	Relay Hurricane;
 	Relay ShooterAngle;
@@ -39,7 +39,7 @@ class RobotDemo : public SimpleRobot
 public:
 	RobotDemo(void):
 		DriveWheels(3,4),
-		FrontWheels(1,2),
+		//FrontWheels(1,2),
 		Shooter(5),
 		Hurricane(3),
 		ShooterAngle(2),
@@ -61,7 +61,7 @@ public:
 	{
 		//vision.Start();
 		DriveWheels.SetExpiration(0.75);
-		FrontWheels.SetExpiration(0.75);
+		//FrontWheels.SetExpiration(0.75);
 		Shooter.SetExpiration(0.75);
 		Shooter.SetEncoder(&shootEncoder);
 		shootEncoder.SetPIDSourceParameter(Encoder::kRate);
@@ -91,7 +91,7 @@ public:
 		int PIDGoodCount = 0;
 		int ShotsTaken = 0;
 		DriveWheels.SetSafetyEnabled(false);
-		FrontWheels.SetSafetyEnabled(false);
+		//FrontWheels.SetSafetyEnabled(false);
 		Shooter.SetSafetyEnabled(false);
 		ShooterPID.Enable();
 		while (IsAutonomous() && IsEnabled() && ShotsTaken < 8)
@@ -120,7 +120,7 @@ public:
 	void OperatorControl(void)
 	{
 		DriveWheels.SetSafetyEnabled(false);
-		FrontWheels.SetSafetyEnabled(false);
+		//FrontWheels.SetSafetyEnabled(false);
 		Shooter.SetSafetyEnabled(false);
 		bool PIDStarted = false;
 		bool manualShooter = false;
@@ -139,22 +139,22 @@ public:
 		StopShooting();
 		while (IsOperatorControl() && IsEnabled())
 		{
-			DriveWheels.TankDrive(-Gamepad.GetRawAxis(2), -Gamepad.GetRawAxis(4));
-			FrontWheels.TankDrive(-Gamepad.GetRawAxis(2), -Gamepad.GetRawAxis(4));
+			DriveWheels.TankDrive(Gamepad.GetRawAxis(4), Gamepad.GetRawAxis(2));
+			//FrontWheels.TankDrive(-Gamepad.GetRawAxis(2), -Gamepad.GetRawAxis(5));
 			Shooter.Feed();
 			if (HurricaneSwitch.Get()!=lastHurricaneSwitch)
 			{
-				printf("Limit of the Hurricane Switch: %d\n", HurricaneSwitch.Get());
+				//printf("Limit of the Hurricane Switch: %d\n", HurricaneSwitch.Get());
 				lastHurricaneSwitch = HurricaneSwitch.Get();
 			}
 			if (ShooterAngleDown.Get()!=lastShooterDown)
 			{
-				printf("Limit of the ShooterAngleDown Switch: %d\n", ShooterAngleDown.Get());
+				//printf("Limit of the ShooterAngleDown Switch: %d\n", ShooterAngleDown.Get());
 				lastShooterDown = ShooterAngleDown.Get();
 			}
 			if (ShooterAngleUp.Get()!=lastShooterUp)
 			{
-				printf("Limit of the ShooterAngleUp Switch: %d\n", ShooterAngleUp.Get());
+				//printf("Limit of the ShooterAngleUp Switch: %d\n", ShooterAngleUp.Get());
 				lastShooterUp = ShooterAngleUp.Get();
 			}
 			if (Gamepad.GetRawButton(4))
@@ -407,38 +407,6 @@ public:
 		Shooting = false;
 		Hurricane.Set(Relay::kOff);
 		printf ("Hurricane Off\n");
-	}
-	
-	void Test()
-	{
-		DriveWheels.SetSafetyEnabled(false);
-		FrontWheels.SetSafetyEnabled(false);
-		Shooter.SetSafetyEnabled(false);
-
-		bool lastHurricaneSwitch=!HurricaneSwitch.Get();
-		bool lastShooterUp=!ShooterAngleUp.Get();
-		bool lastShooterDown=!ShooterAngleDown.Get();
-
-		while (IsTest() && IsEnabled())
-		{
-			if (HurricaneSwitch.Get()!=lastHurricaneSwitch)
-			{
-				printf("Limit of the Hurricane Switch: %d\n", HurricaneSwitch.Get());
-				lastHurricaneSwitch = HurricaneSwitch.Get();
-			}
-			if (ShooterAngleDown.Get()!=lastShooterDown)
-			{
-				printf("Limit of the ShooterAngleDown Switch: %d\n", ShooterAngleDown.Get());
-				lastShooterDown = ShooterAngleDown.Get();
-			}
-			if (ShooterAngleUp.Get()!=lastShooterUp)
-			{
-				printf("Limit of the ShooterAngleUp Switch: %d\n", ShooterAngleUp.Get());
-				lastShooterUp = ShooterAngleUp.Get();
-			}
-			Wait(.05);
-			
-		}
 	}
 };
 
